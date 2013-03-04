@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs24 \cf0 Option Explicit\
+Option Base 1\
+\
+Sub MySummaryStats()\
+\
+' This subroutine uses the spreadsheet from the first class\
+' and analyses the FTSE returns therein to compute four\
+' summary statistics viz. min, max, range and average\
+' for that dataset\
+\
+' It is an illustration of the array data structure\
+' Traversing through the array is facilitated by the use\
+' of For Next loops\
+\
+' Option Explicit above forces you to declare all variables\
+' Option Base 1 makes the array index begin at 1 instead of 0\
+\
+' Declare Variables\
+' note that while declaring the array, its size is specified\
+' this is known as a static array\
+\
+Dim i As Integer\
+Dim NoOfObservations As Integer\
+Dim Returns(61) As Single\
+Dim Min As Single, Max As Single\
+Dim Sum As Single, Avg As Single\
+\
+' Hard code the number of observations\
+\
+NoOfObservations = 61\
+\
+' Read Returns\
+\
+For i = 1 To NoOfObservations\
+Returns(i) = Range("C1").Offset(i, 0)\
+Next i\
+\
+' Output returns just to check/verify\
+\
+For i = 1 To NoOfObservations\
+Range("G1").Offset(i, 0) = Returns(i)\
+Next i\
+\
+' Computation of Min\
+\
+' Initialise Min to first element of the array\
+\
+Min = Returns(1)\
+\
+' Traverse through the array\
+\
+For i = 1 To NoOfObservations\
+\
+' If current element is lower then update Min\
+\
+If Returns(i) < Min Then Min = Returns(i)\
+\
+Next i\
+\
+' Output Min\
+\
+Range("F3") = Min\
+\
+' Computation of Max\
+\
+' Initialise Max to first element of the array\
+\
+Max = Returns(1)\
+\
+' Traverse through the array\
+\
+For i = 1 To NoOfObservations\
+\
+' If current element is higher then update Max\
+\
+If Max < Returns(i) Then Max = Returns(i)\
+\
+Next i\
+\
+' Output Max\
+\
+Range("F4") = Max\
+\
+Range("F5") = Max - Min\
+\
+' Computation of Average\
+\
+' Initialise Average and Total to 0\
+\
+Avg = 0\
+Sum = 0\
+\
+' Traverse through the array\
+\
+For i = 1 To NoOfObservations\
+\
+' Accumulate array values in the total\
+\
+' This technique is also seen in the For Next examples\
+' you did before where cumulative sums were being computed\
+' e.g. computing sum of squares of first few integers\
+\
+Sum = Sum + Returns(i)\
+\
+Next i\
+\
+'Compute average from total and output to spreadsheet\
+\
+Range("F2") = Sum / NoOfObservations\
+\
+End Sub\
+}

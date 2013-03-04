@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs24 \cf0 Option Explicit\
+Option Base 0\
+\
+Sub ExpVarCashflows()\
+\
+Dim CashflowVec, ProbabVec\
+\
+' Create arrays for cashflows and probabilities\
+\
+CashflowVec = Array(-500, 100, 700, 1300, 2900)\
+ProbabVec = Array(0.05, 0.2, 0.5, 0.2, 0.05)\
+\
+'Compute expected cashflow\
+\
+ExpCF = Application.SumProduct(CashflowVec, ProbabVec)\
+\
+VarCF = 0\
+\
+For i = 0 To Application.Count(CashflowVec) - 1\
+\
+VarCF = VarCF + ProbabVec(i) * (CashflowVec(i) - ExpCF) ^ 2\
+\
+Next i\
+\
+MsgBox "Expected Cashflow is" & ExpCF\
+MsgBox "Variance of Cashflows is" & VarCF\
+\
+End Sub\
+      \
+}

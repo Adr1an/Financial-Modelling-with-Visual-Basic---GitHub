@@ -1,0 +1,135 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs24 \cf0 Option Explicit\
+\
+'This subroutine computes the value of e^x\
+'using the approximation formula and outputs\
+'the result together with the error\
+Sub Exponent()\
+\
+'Declare Variables\
+\
+Dim x As Double\
+\
+Dim i As Integer\
+\
+Dim n, Num As Integer\
+\
+Dim Result, Result1, Error As Double\
+\
+'Declare Dynamic array\
+Dim Expo() As Double\
+\
+\
+'Allow the user to input the power and the number of\
+'approximation terms\
+\
+x = InputBox("Enter the power for which to compute the exponential (x)")\
+Num = InputBox("Enter the number of approximation terms")\
+\
+'Adjust the variable for the size of the array\
+'for the "Base 0"\
+n = Num - 1\
+\
+\
+'Redeclare the array with the user defined size\
+ReDim Expo(n)\
+\
+\
+'Loop while calculating approximation terms and\
+'populating the array with the results\
+For i = 0 To n\
+\
+Expo(i) = x ^ i / Fact(i)\
+\
+Next i\
+\
+\
+'Loop to add up all the terms in the array into one variable\
+For i = 0 To n\
+\
+Result = Result + Expo(i)\
+\
+Next i\
+\
+\
+'Calculate the exponential using the built in function\
+Result1 = Exp(x)\
+\
+\
+'Compute the absolute value of the error between\
+'approximation and the excel function\
+Error = Abs(Result - Result1)\
+\
+\
+'Output the result\
+MsgBox ("The result is " & Result)\
+\
+'Output the error\
+MsgBox ("The error is " & Error)\
+\
+\
+End Sub\
+\
+'This function computes the exponential using\
+'built in application\
+Function Fact(n)\
+\
+Fact = Application.Fact(n)\
+\
+End Function\
+\
+'This subroutine utilises the offset function\
+'to fill a row, a column and a diagonal with a\
+'sequence of numbers\
+\
+Sub ReviewOffset()\
+\
+'Declare an index variable for the loop\
+Dim i As Integer\
+\
+\
+'Loop to fill vertical column by altering the\
+'vertical element of the offset function\
+For i = 1 To 10\
+\
+Range("A1").Offset(i - 1, 0) = i\
+\
+'Apply the fill color\
+Range("A1").Offset(i - 1, 0).Interior.ColorIndex = 10\
+\
+Next i\
+\
+\
+'Loop to fill horizontal row by altering the\
+'horizontal element of the offset function\
+For i = 1 To 10\
+\
+Range("A1").Offset(0, i - 1) = i\
+\
+'Apply the fill color\
+Range("A1").Offset(0, i - 1).Interior.ColorIndex = 20\
+\
+Next i\
+\
+\
+\
+'Loop to fill a diagonal by altering the\
+'both elements of the offset function\
+For i = 1 To 10\
+\
+Range("A1").Offset(i, i) = i\
+\
+'Apply the fill color\
+Range("A1").Offset(i, i).Interior.ColorIndex = 30\
+\
+Next i\
+\
+\
+End Sub\
+}

@@ -1,0 +1,124 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 Function A_Rand()\
+\
+A_Rand = Application.RandBetween(0, 100)\
+\
+End Function\
+\
+\
+Sub PortfolioLoss()\
+\
+Dim A As Double\
+Dim n As Integer\
+Dim p As Double\
+Dim i, j, k, m, t, l As Integer\
+Dim c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11 As Integer\
+Dim sum1 As Double\
+Dim PLoss(500)\
+\
+\
+A = Range("B1")\
+n = Range("B2")\
+p = Range("B3")\
+t = Range("B4")\
+\
+\
+c1 = 0\
+c2 = 0\
+c3 = 0\
+c4 = 0\
+c5 = 0\
+c6 = 0\
+c7 = 0\
+c8 = 0\
+c9 = 0\
+c10 = 0\
+c11 = 0\
+\
+\
+For j = 0 To t - 1\
+\
+\
+sum1 = 0\
+\
+For i = 0 To n\
+\
+m = A_Rand\
+\
+If m < p Then\
+\
+sum1 = sum1 + A\
+\
+End If\
+\
+Next i\
+\
+\
+PLoss(j) = sum1\
+\
+Range("D1").Offset(j) = PLoss(j)\
+\
+Next j\
+\
+\
+For k = 0 To t - 1\
+\
+l = PLoss(k)\
+\
+If l = 0 Then\
+c1 = c1 + 1\
+\
+ElseIf l = 10 Then\
+c2 = c2 + 1\
+\
+ElseIf l = 20 Then\
+c3 = c3 + 1\
+\
+ElseIf l = 30 Then\
+c4 = c4 + 1\
+\
+ElseIf l = 40 Then\
+c5 = c5 + 1\
+\
+ElseIf l = 50 Then\
+c6 = c6 + 1\
+\
+ElseIf l = 60 Then\
+c7 = c7 + 1\
+\
+ElseIf l = 70 Then\
+c8 = c8 + 1\
+\
+ElseIf l = 80 Then\
+c9 = c9 + 1\
+\
+ElseIf l = 90 Then\
+c10 = c10 + 1\
+\
+Else\
+c11 = c11 + 1\
+\
+End If\
+\
+Next k\
+\
+\
+Range("G2") = c1\
+Range("G3") = c2\
+Range("G4") = c3\
+Range("G5") = c4\
+Range("G6") = c5\
+Range("G7") = c6\
+Range("G8") = c7\
+Range("G9") = c8\
+Range("G10") = c9\
+Range("G11") = c10\
+Range("G12") = c11\
+\
+\
+End Sub}

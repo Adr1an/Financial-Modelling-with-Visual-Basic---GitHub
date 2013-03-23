@@ -1,5 +1,435 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-{\fonttbl}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
-}
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 Option Explicit\
+Option Base 0\
+\
+'ProblemOne\
+\
+'This subroutine creates a stock price binomial tree and calculates the expected discounted future stock price\
+Sub ProblemOne()\
+\
+\
+'Declare variables\
+Dim S, Su, Sd  As Double\
+Dim p, R As Double\
+Dim x As Double\
+\
+'Input data from the spreadsheet\
+S = Range("B1").Value\
+Su = Range("B2").Value\
+Sd = Range("B3").Value\
+p = Range("B6").Value\
+R = Range("B7").Value\
+\
+'Compute the expected discounted future stock price\
+x = ((p * Su) + (1 - p) * Sd) / R\
+\
+'Output the stock prices in a form of a binomial tree\
+Range("E5").Value = S\
+Range("G3").Value = Su\
+Range("G7").Value = Sd\
+\
+'Output the expected discounted future stock price to the spreadsheet\
+Range("I5").Value = x\
+\
+\
+End Sub\
+\
+'ProblemTwo\
+\
+'This function computes the risk neutral probability.\
+Function ComputeQ(S, Su, Sd, R)\
+\
+ComputeQ = (S * R - Sd) / (Su - Sd)\
+\
+\
+End Function\
+\
+'This function computes the expected discounted value of two probable cashflows.\
+Function ComputePrice(ValueUp, ValueDown, q, R)\
+\
+ComputePrice = ((q * ValueUp) + (1 - q) * ValueDown) / R\
+\
+\
+End Function\
+\
+'ProblemThree\
+\
+'This subroutine calculates the price of a European Call Option\
+'utilising the ComputeQ function and ComputePrice function.\
+Sub ProblemThree()\
+\
+\
+'Declare the data variables\
+Dim S, Su, Sd, u, d  As Double\
+Dim R, K, q As Double\
+Dim C, Cu, Cd As Double\
+\
+'Input the data from the spreadsheet\
+S = Range("B1").Value\
+u = Range("B4").Value\
+d = Range("B5").Value\
+R = Range("B7").Value\
+K = Range("B8").Value\
+\
+'Compute the appreciated and depreciated future prices\
+Su = S * u\
+Sd = S * d\
+\
+'compute the risk neutral probability using ComputeQ function\
+q = ComputeQ(S, Su, Sd, R)\
+\
+'Compute 2 possible payoffs on the call option, using the Payoff Function\
+Cu = Payoff(Su, K)\
+Cd = Payoff(Sd, K)\
+\
+'Utilise the ComputePrice function to find the expected discounted futue payoff, i.e.\
+'the European Call Option Price.\
+\
+C = ComputePrice(Cu, Cd, q, R)\
+\
+Range("M4").Value = C\
+\
+\
+End Sub\
+\
+'This Function computes the payoff for the European Call Option\
+Function Payoff(Price, K)\
+\
+\
+Payoff = Price - K\
+\
+'Check if the payoff is negative replace it with 0, otherwise leave it as it is\
+\
+    If Payoff < 0 Then\
+    Payoff = 0\
+    End If\
+\
+\
+End Function\
+\
+'ProblemFour\
+\
+'This subroutine creates a two period binomial tree for the\
+'stock price and the option payoffs and calculates the price\
+'of a European Call Option utilising the ComputeQ function and\
+'ComputePrice function.\
+Sub ProblemFour()\
+\
+\
+'Declare the data variables\
+Dim S, Su, Sd, Suu, Sdd, Sud, u, d  As Double\
+Dim R, K, q As Double\
+Dim C, Cu, Cd, Cuu, Cdd, Cud As Double\
+\
+'Input the data from the spreadsheet\
+S = Range("B1").Value\
+u = Range("B4").Value\
+d = Range("B5").Value\
+R = Range("B7").Value\
+K = Range("B8").Value\
+\
+'Compute the appreciated and depreciated future prices of stock\
+Su = S * u\
+Sd = S * d\
+Suu = Su * u\
+Sdd = Sd * d\
+Sud = Su * d\
+\
+'Output the possible stock prices in a form of a binomial tree\
+Range("E16").Value = S\
+Range("G14").Value = Su\
+Range("G18").Value = Sd\
+Range("I12").Value = Suu\
+Range("I20").Value = Sdd\
+Range("I16").Value = Sud\
+\
+'compute the risk neutral probability using ComputeQ function\
+q = ComputeQ(S, Su, Sd, R)\
+\
+'Compute possible payoffs on the call option in period 2, using the Payoff Function\
+Cuu = Payoff(Suu, K)\
+Cdd = Payoff(Sdd, K)\
+Cud = Payoff(Sud, K)\
+\
+'Utilise the ComputePrice function to find the expected discounted futue payoffs in period 1\
+Cu = ComputePrice(Cuu, Cud, q, R)\
+Cd = ComputePrice(Cdd, Cud, q, R)\
+\
+'compute the price of a European Call option\
+C = ComputePrice(Cu, Cd, q, R)\
+\
+'Output option's payoffs and its price in a form of a binomial tree\
+Range("Q12").Value = Cuu\
+Range("Q16").Value = Cud\
+Range("Q20").Value = Cdd\
+Range("O14").Value = Cu\
+Range("O18").Value = Cd\
+Range("M16").Value = C\
+\
+\
+End Sub\
+\
+'ProbelmFiveA\
+\
+Sub ProblemFive_PartA()\
+\
+\
+'Declare the data variables\
+Dim S, u, d  As Double\
+Dim R, K, q As Double\
+Dim Price(3, 3) As Double\
+Dim OptionValue(3, 3) As Double\
+Dim i, j, N As Integer\
+Dim Flag As Integer\
+\
+'Input data from the spreadsheet\
+S = Range("B1").Value\
+u = Range("B4").Value\
+d = Range("B5").Value\
+R = Range("B7").Value\
+K = Range("B8").Value\
+\
+'Number of periods to be used in the binomial tree\
+N = 3\
+\
+'Calculate the risk neutral probability\
+q = ComputeQ(S, S * u, S * d, R)\
+\
+'A nested loop to fill in the array with the stock prices\
+For j = 0 To N\
+    For i = 0 To j\
+        \
+        Price(j, i) = S * (u ^ i) * (d ^ (j - i))\
+    \
+    Next i\
+Next j\
+\
+'A nested loop to fill in the array for OptionValues, for the last period only\
+For i = 0 To N\
+    \
+    'Computes the final payoffs using the "Payoff function"\
+    OptionValue(N, i) = Payoff(Price(N, i), K)\
+    \
+Next i\
+\
+'A nested loop to fill in all the other values of the option\
+For j = N - 1 To 0 Step -1\
+    For i = 0 To j\
+    \
+        'Computes Option values, utilising the ComputePrice function\
+        OptionValue(j, i) = ComputePrice(OptionValue(j + 1, i + 1), OptionValue(j + 1, i), q, R)\
+    \
+    Next i\
+Next j\
+\
+'Call the Output Sub to output the results in a form of a binomial tree\
+Output Price(), OptionValue, N, Flag\
+\
+\
+End Sub\
+\
+'This Sub outputs the passed arrays, which contain stock prices and\
+'option values in the form of a binomial tree\
+Sub Output(Price() As Double, OptionValue() As Double, N, Flag)\
+\
+\
+'Declare index variables\
+Dim i, j As Integer\
+\
+If Flag = 0 Then\
+\
+For j = 0 To N\
+    For i = 0 To j\
+\
+Range("E63").Offset(0 - i * 2 + j, j) = Price(j, i)\
+Range("L63").Offset(0 - i * 2 + j, j) = OptionValue(j, i)\
+    \
+    Next i\
+Next j\
+\
+Else\
+\
+For j = 0 To N\
+    For i = 0 To j\
+\
+Range("E103").Offset(0 - i * 2 + j, j) = Price(j, i)\
+Range("R103").Offset(0 - i * 2 + j, j) = OptionValue(j, i)\
+    \
+    Next i\
+Next j\
+\
+End If\
+\
+\
+End Sub\
+\
+'ProblemFiveB\
+\
+Sub ProblemFive_PartB()\
+\
+\
+'Declare the data variables\
+Dim S, u, d  As Double\
+Dim R, K, q As Double\
+Dim Price() As Double\
+Dim OptionValue() As Double\
+Dim i, j, N As Integer\
+Dim Flag As Integer\
+\
+'Input data from the spreadsheet\
+S = Range("B1").Value\
+u = Range("B4").Value\
+d = Range("B5").Value\
+R = Range("B7").Value\
+K = Range("B8").Value\
+\
+Flag = 1\
+\
+'Prompt the user to input the number of periods to be used for the binomial tree\
+N = InputBox("Please eneter the number of periods")\
+\
+'Redeclare the arrays with the dimensions equal to the number of periods in binomial tree\
+ReDim Price(N, N), OptionValue(N, N)\
+\
+'Compute the risk neutral probability\
+q = ComputeQ(S, S * u, S * d, R)\
+\
+'A nested loop which fills the array with stock prices\
+For j = 0 To N\
+    For i = 0 To j\
+        \
+        Price(j, i) = S * (u ^ i) * (d ^ (j - i))\
+    \
+    Next i\
+Next j\
+\
+'This loop traverses through the last period of the tree and fills the\
+'last period of payofs into the options value array\
+For i = 0 To N\
+    \
+    'Utilising the Payoff function compute the final payoffs and store them in the array\
+    OptionValue(N, i) = Payoff(Price(N, i), K)\
+    \
+Next i\
+\
+'This nested loop takes the final payoffs of the option and goes back in time computing\
+'the remaining values of the option\
+For j = N - 1 To 0 Step -1\
+    For i = 0 To j\
+    \
+        'Computes the option values using the Compute Price function\
+        OptionValue(j, i) = ComputePrice(OptionValue(j + 1, i + 1), OptionValue(j + 1, i), q, R)\
+    \
+    Next i\
+Next j\
+\
+Output Price(), OptionValue, N, Flag\
+\
+\
+End Sub\
+\
+'ProblemSix\
+\
+Sub ProblemSix()\
+\
+\
+'Declare the data variables\
+Dim S, u, d  As Double\
+Dim R, K, q As Double\
+Dim U_adjusted, D_adjusted, R_adjusted As Double\
+\
+Dim Price() As Double\
+Dim OptionValue() As Double\
+\
+Dim Price2() As Double\
+Dim OptionValue2() As Double\
+\
+Dim Price3() As Double\
+Dim OptionValue3() As Double\
+\
+Dim i, j, a, N, N1, N2, N3, n4, n5, n6 As Integer\
+\
+S = Range("B1").Value\
+u = Range("B11").Value\
+d = Range("B12").Value\
+R = Range("B13").Value\
+K = Range("B8").Value\
+\
+N1 = 256\
+N2 = 128\
+N3 = 64\
+n4 = 32\
+n5 = 16\
+n6 = 8\
+\
+For a = 0 To 5\
+\
+    If a = 0 Then\
+    N = N1\
+    ElseIf a = 1 Then\
+    N = N2\
+    ElseIf a = 2 Then\
+    N = N3\
+    ElseIf a = 3 Then\
+    N = n4\
+    ElseIf a = 4 Then\
+    N = n5\
+    ElseIf a = 5 Then\
+    N = n6\
+    End If\
+    \
+ReDim Price(N, N), OptionValue(N, N)\
+\
+U_adjusted = ConvertRate(N, u)\
+D_adjusted = ConvertRate(N, d)\
+R_adjusted = ConvertRate(N, R)\
+\
+q = ComputeQ(S, (S * U_adjusted), (S * D_adjusted), R_adjusted)\
+\
+'Fill the array with the stock prices\
+For j = 0 To N\
+    For i = 0 To j\
+       \
+        Price(j, i) = S * (U_adjusted ^ i) * (D_adjusted ^ (j - i))\
+    \
+    Next i\
+    \
+Next j\
+\
+'Fill the array with the last payoff\
+For i = 0 To N\
+    OptionValue(N, i) = Payoff(Price(N, i), K)\
+    \
+    Next i\
+\
+'Fill the array with all the payoffs\
+For j = N - 1 To 0 Step -1\
+    For i = 0 To j\
+    \
+    OptionValue(j, i) = ComputePrice(OptionValue(j + 1, i + 1), OptionValue(j + 1, i), q, R_adjusted)\
+    \
+    Next i\
+Next j\
+\
+Range("B16").Offset(a, 0) = OptionValue(0, 0)\
+\
+Next a\
+\
+\
+End Sub\
+\
+Function ConvertRate(N, Value)\
+\
+\
+Dim Power As Double\
+\
+Power = 256 / N\
+ConvertRate = Value ^ Power\
+\
+\
+End Function}
